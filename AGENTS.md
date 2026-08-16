@@ -7,9 +7,9 @@ Mantener y desplegar un entorno de PowerShell (`pwsh` / `powershell.exe`) altame
 
 ---
 
-## 🗺️ 2. Mapa del Directorio `powershell-custom`
+## 🗺️ 2. Mapa del Directorio `mis-configuraciones-powershell`
 
-El repositorio reside localmente en `C:\Users\jdres\.config\powershell-custom\` (remoto `git@github.com:jdrestre/mis-configuraciones-powershell.git`).
+El repositorio reside localmente en la ubicación elegida por el usuario (por defecto `C:\Users\jdres\mis-configuraciones-powershell\`, remoto `git@github.com:jdrestre/mis-configuraciones-powershell.git`).
 
 - **`Profile.ps1`**: Perfil maestro cargado desde `$PROFILE`.
 - **`config/`**: `oh-my-posh-theme.json` (Tema de Oh My Posh optimizado).
@@ -18,7 +18,7 @@ El repositorio reside localmente en `C:\Users\jdres\.config\powershell-custom\` 
   - `Autocomplete.ps1`: Configuración defensiva de PSReadLine (ListView + History Predictor).
   - `Environment.ps1`: Variables de entorno (`$env:COLORTERM`, UTF-8, etc.).
   - `HealthCheck.ps1`: Auditoría de salud ejecutada con el comando `pwsh-health`.
-- **`bootstrap.ps1`**: Script de aprovisionamiento automatizado con capacidad de auto-relocalización.
+- **`bootstrap.ps1`**: Script de aprovisionamiento automatizado dinámico ($PSScriptRoot).
 - **`docs/adr/`**: Registro Histórico de Decisiones de Arquitectura (ADR).
 
 ---
@@ -35,8 +35,8 @@ Cualquier agente de IA o desarrollador que modifique este repositorio **DEBE** r
    - Datos personales sensibles (`user.email`, `user.name`, llaves privadas SSH/GPG) **NUNCA** se versionan en Git.
    - Residen exclusivamente en los archivos locales del sistema (`C:\Users\jdres\.gitconfig` y `C:\Users\jdres\.ssh\`).
 
-3. **Guardarraíl 3 (Preservar Auto-Relocalización en Bootstrap)**:
-   - `bootstrap.ps1` debe mantener la lógica de auto-mover el repositorio a `$HOME\.config\powershell-custom` si el usuario lo clona en la raíz de su perfil (`C:\Users\<Usuario>`), evitando comandos de escritura manual de rutas.
+3. **Guardarraíl 3 (Preservar Ubicación Dinámica PSScriptRoot)**:
+   - `bootstrap.ps1` **NUNCA** debe forzar copias ni mover carpetas a rutas rígidas. Debe resolver la ubicación del repositorio dinámicamente usando `$PSScriptRoot` para evitar duplicados en el disco duro.
 
 4. **Guardarraíl 4 (Cero Excepciones en Perfil)**:
    - El archivo `Profile.ps1` debe capturar posibles errores de carga sin interrumpir la sesión interactiva del usuario.
@@ -44,9 +44,13 @@ Cualquier agente de IA o desarrollador que modifique este repositorio **DEBE** r
 5. **Guardarraíl 5 (Tiempo de Inicio Ultra Rápido)**:
    - Mantener el tiempo de carga total del perfil por debajo de **100ms**.
 
+6. **Guardarraíl 6 (Commits en Español)**:
+   - Todos los mensajes de commit en Git y los registros ADR deben redactarse profesionalmente en **español**.
+
 ---
 
 ## 📚 4. Historial de Decisiones de Arquitectura (ADR)
 
-- [ADR 0001: Ubicación Estándar XDG en `~/.config/powershell-custom`](file:///C:/Users/jdres/.config/powershell-custom/docs/adr/0001-powershell-architecture.md)
-- [ADR 0002: Reubicación Automática del Repositorio vía Bootstrap y Flujo de 2 Pasos](file:///C:/Users/jdres/.config/powershell-custom/docs/adr/0002-bootstrap-auto-relocation.md)
+- [ADR 0001: Ubicación Estándar XDG en `~/.config/powershell-custom`](file:///C:/Users/jdres/mis-configuraciones-powershell/docs/adr/0001-powershell-architecture.md)
+- [ADR 0002: Reubicación Automática del Repositorio vía Bootstrap y Flujo de 2 Pasos](file:///C:/Users/jdres/mis-configuraciones-powershell/docs/adr/0002-bootstrap-auto-relocation.md)
+- [ADR 0003: Arquitectura de Ubicación Dinámica (Opción 1 - Cero Duplicados)](file:///C:/Users/jdres/mis-configuraciones-powershell/docs/adr/0003-dynamic-location-architecture.md)

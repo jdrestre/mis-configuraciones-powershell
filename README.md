@@ -1,6 +1,6 @@
-# ⚡ Mis Configuraciones PowerShell (`powershell-custom`)
+# ⚡ Mis Configuraciones PowerShell (`mis-configuraciones-powershell`)
 
-¡Bienvenido a la suite personalizada, modular y 100% automatizada de **Windows PowerShell**!
+¡Bienvenido a la suite personalizada, modular y 100% automatizada para **Windows PowerShell**!
 
 Este repositorio contiene las configuraciones, utilidades, alias, autocompletado avanzado y temas visuales para **PowerShell Core (`pwsh`)** y **Windows PowerShell**, estructurados bajo las mejores prácticas de Microsoft y [ohmyposh.dev](https://ohmyposh.dev/).
 
@@ -8,7 +8,7 @@ Este repositorio contiene las configuraciones, utilidades, alias, autocompletado
 
 ## ⚡ Instalación en 2 Pasos Sencillos (Desde la Raíz de Usuario)
 
-No necesitas recordar rutas complejas ni crear carpetas a mano. Cuando estés en cualquier computador nuevo con Windows 11, colócate en la carpeta raíz de tu usuario (`C:\Users\<TuUsuario>`) y sigue estos 2 pasos:
+No necesitas recordar rutas complejas ni crear carpetas a mano. Cuando estés en cualquier computador nuevo con Windows 11, colócate en la carpeta raíz de tu usuario (`C:\Users\<TuUsuario>`) y sigue estos 2 sencillos pasos:
 
 ### 1️⃣ Paso 1: Clonar el repositorio
 ```powershell
@@ -24,12 +24,12 @@ git clone git@github.com:jdrestre/mis-configuraciones-powershell.git
 
 ## 🧭 ¿Qué hace el instalador `bootstrap.ps1` automáticamente?
 
-Una vez ejecutas `bootstrap.ps1`, el script toma el control y realiza todo de forma transparente:
+El proceso realiza todo en segundo plano sin intervención manual y sin duplicar carpetas en tu equipo:
 
-1. **Relocalización Automática de Carpetas**: Detecta si estás ejecutando el script desde la raíz o desde la descarga inicial, crea la carpeta `.config` y mueve/ubica el repositorio en `$HOME\.config\powershell-custom`.
-2. **Auto-instalación de Requisitos**: Instala **Git for Windows**, **Oh My Posh** o **Terminal-Icons** usando `winget` e `Install-Module` si no están en el equipo.
-3. **Respaldo y Vinculación Novedosa de Perfil**: Detecta dónde está el `$PROFILE` nativo del sistema (OneDrive o Documentos local), crea un respaldo `.bak` si existía un perfil viejo y configura el puente hacia el perfil maestro.
-4. **Habilitación de Políticas de Ejecución**: Configura `ExecutionPolicy RemoteSigned` automáticamente para evitar bloqueos de scripts.
+1. **Ubicación Dinámica**: Detecta automáticamente la ruta exacta donde clonaste el proyecto sin forzar copias ni mover archivos en el disco duro.
+2. **Auto-instalación de Requisitos**: Detecta si falta **Git for Windows**, **Oh My Posh** o **Terminal-Icons**, e instala lo necesario usando `winget` y `Install-Module`.
+3. **Respaldo y Vinculación Novedosa**: Detecta dónde está el `$PROFILE` nativo del sistema (OneDrive o Documentos local), crea un respaldo `.bak` si existía un perfil viejo y configura la vinculación puente hacia `Profile.ps1`.
+4. **Habilitación de Políticas**: Configura `ExecutionPolicy RemoteSigned` automáticamente para el usuario.
 
 ---
 
