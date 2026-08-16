@@ -1,0 +1,8 @@
+# Archivos y Carpetas Ignorados por Seguridad y Limpieza
+.env
+.ssh/
+*.pem
+*.key
+*.bak
+*.bak.*
+Microsoft.PowerShell_profile.ps1
