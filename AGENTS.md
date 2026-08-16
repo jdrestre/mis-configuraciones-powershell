@@ -38,13 +38,16 @@ Cualquier agente de IA o desarrollador que modifique este repositorio **DEBE** r
 3. **Guardarraíl 3 (Preservar Ubicación Dinámica PSScriptRoot)**:
    - `bootstrap.ps1` **NUNCA** debe forzar copias ni mover carpetas a rutas rígidas. Debe resolver la ubicación del repositorio dinámicamente usando `$PSScriptRoot` para evitar duplicados en el disco duro.
 
-4. **Guardarraíl 4 (Cero Excepciones en Perfil)**:
+4. **Guardarraíl 4 (Vinculación Dual de Perfiles)**:
+   - `bootstrap.ps1` debe asegurar la vinculación del perfil en **ambas ediciones de PowerShell** (Windows PowerShell 5.1 y PowerShell Core 7+) para garantizar el soporte multiplataforma en cualquier consola de Windows.
+
+5. **Guardarraíl 5 (Cero Excepciones en Perfil)**:
    - El archivo `Profile.ps1` debe capturar posibles errores de carga sin interrumpir la sesión interactiva del usuario.
 
-5. **Guardarraíl 5 (Tiempo de Inicio Ultra Rápido)**:
+6. **Guardarraíl 6 (Tiempo de Inicio Ultra Rápido)**:
    - Mantener el tiempo de carga total del perfil por debajo de **100ms**.
 
-6. **Guardarraíl 6 (Commits en Español)**:
+7. **Guardarraíl 7 (Commits en Español)**:
    - Todos los mensajes de commit en Git y los registros ADR deben redactarse profesionalmente en **español**.
 
 ---
@@ -54,3 +57,4 @@ Cualquier agente de IA o desarrollador que modifique este repositorio **DEBE** r
 - [ADR 0001: Ubicación Estándar XDG en `~/.config/powershell-custom`](file:///C:/Users/jdres/mis-configuraciones-powershell/docs/adr/0001-powershell-architecture.md)
 - [ADR 0002: Reubicación Automática del Repositorio vía Bootstrap y Flujo de 2 Pasos](file:///C:/Users/jdres/mis-configuraciones-powershell/docs/adr/0002-bootstrap-auto-relocation.md)
 - [ADR 0003: Arquitectura de Ubicación Dinámica (Opción 1 - Cero Duplicados)](file:///C:/Users/jdres/mis-configuraciones-powershell/docs/adr/0003-dynamic-location-architecture.md)
+- [ADR 0004: Vinculación Dual de Perfiles (Windows PowerShell 5.1 y PowerShell Core 7+)](file:///C:/Users/jdres/mis-configuraciones-powershell/docs/adr/0004-dual-powershell-profile-binding.md)

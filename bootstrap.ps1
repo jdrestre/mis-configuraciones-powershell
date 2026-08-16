@@ -1,4 +1,4 @@
-# Bootstrap Script for powershell-custom (Dynamic Location Architecture)
+# Bootstrap Script for powershell-custom (Dynamic Location & Dual Profile Binding)
 
 [CmdletBinding()]
 param()
@@ -7,11 +7,15 @@ $ErrorActionPreference = "Stop"
 
 Write-Host "Iniciando Aprovisionamiento de PowerShell Dotfiles..." -ForegroundColor Cyan
 
-# 1. Execution Policy
-$currentPolicy = Get-ExecutionPolicy
-if ($currentPolicy -notmatch "RemoteSigned|Unrestricted|Bypass") {
-    Write-Host "Configurando ExecutionPolicy a RemoteSigned..." -ForegroundColor Yellow
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+# 1. Execution Policy Configuration for CurrentUser
+try {
+    $currentPolicy = Get-ExecutionPolicy -Scope CurrentUser
+    if ($currentPolicy -notmatch "RemoteSigned|Unrestricted|Bypass") {
+        Write-Host "Configurando ExecutionPolicy a RemoteSigned en CurrentUser..." -ForegroundColor Yellow
+        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+    }
+} catch {
+    # Continuar de forma defensiva si no se puede cambiar
 }
 
 # 2. Git for Windows Check
@@ -45,27 +49,32 @@ if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
 $scriptDir = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 $configProfilePath = Join-Path $scriptDir "Profile.ps1"
 
-# 6. Profile Binding
-$userProfilePath = if ($PROFILE) { $PROFILE } else { "$HOME\OneDrive\Documentos\PowerShell\Microsoft.PowerShell_profile.ps1" }
-$userProfileDir = Split-Path -Parent -Path $userProfilePath
+# 6. Dual Profile Binding (Windows PowerShell 5.1 & PowerShell Core 7+)
+$profileTargets = @(
+    "$HOME\OneDrive\Documentos\WindowsPowerShell\Microsoft.PowerShell_profile.ps1",
+    "$HOME\OneDrive\Documentos\PowerShell\Microsoft.PowerShell_profile.ps1",
+    "$HOME\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1",
+    "$HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
+)
 
-if (-not (Test-Path -Path $userProfileDir)) {
-    New-Item -ItemType Directory -Path $userProfileDir -Force | Out-Null
-}
+$shim = "# Cargador shim powershell-custom`nif (Test-Path '$configProfilePath') { . '$configProfilePath' }"
 
-if (Test-Path -Path $userProfilePath) {
-    $existingContent = Get-Content -Path $userProfilePath -Raw -ErrorAction SilentlyContinue
-    if ($existingContent -and ($existingContent -notmatch "powershell-custom")) {
-        $backupPath = "$userProfilePath.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
-        Write-Host "Creando copia de seguridad del perfil en $backupPath..." -ForegroundColor Yellow
-        Copy-Item -Path $userProfilePath -Destination $backupPath -Force
+foreach ($targetPath in $profileTargets) {
+    $parentDir = Split-Path -Parent -Path $targetPath
+    if (Test-Path -Path $parentDir) {
+        # Respaldar si el archivo existe y no tiene el shim
+        if (Test-Path -Path $targetPath) {
+            $existingContent = Get-Content -Path $targetPath -Raw -ErrorAction SilentlyContinue
+            if ($existingContent -and ($existingContent -notmatch "powershell-custom")) {
+                $backupPath = "$targetPath.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
+                Write-Host "Creando copia de seguridad en $backupPath..." -ForegroundColor Yellow
+                Copy-Item -Path $targetPath -Destination $backupPath -Force
+            }
+        }
+        Set-Content -Path $targetPath -Value $shim -Encoding UTF8
+        Write-Host "Perfil vinculado correctamente en: $targetPath" -ForegroundColor Green
     }
 }
 
-# Write Dynamic Shim Loader
-$shim = "# Cargador shim powershell-custom`nif (Test-Path '$configProfilePath') { . '$configProfilePath' }"
-Set-Content -Path $userProfilePath -Value $shim -Encoding UTF8
-
-Write-Host "Perfil vinculado dinamicamente en: $userProfilePath" -ForegroundColor Green
-Write-Host "Apuntando directamente a: $configProfilePath" -ForegroundColor Cyan
-Write-Host "Aprovisionamiento completado con exito." -ForegroundColor Green
+Write-Host "Apuntando dinamicamente a: $configProfilePath" -ForegroundColor Cyan
+Write-Host "Aprovisionamiento completado con exito. Abre una nueva terminal para disfrutar de tu entorno." -ForegroundColor Green

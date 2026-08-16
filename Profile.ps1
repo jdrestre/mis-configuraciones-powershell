@@ -1,7 +1,6 @@
 # ==============================================================================
-# 🎯 PERFIL MAESTRO DE POWERSHELL (`powershell-custom`)
+# 🎯 PERFIL MAESTRO DE POWERSHELL (`mis-configuraciones-powershell`)
 # ==============================================================================
-# Ubicación: C:\Users\jdres\.config\powershell-custom\Profile.ps1
 # Autores: Juan David Restrepo (jdrestre)
 # ==============================================================================
 
@@ -9,7 +8,14 @@
 if ($env:PWSH_CUSTOM_LOADED -eq 'true') { return }
 $env:PWSH_CUSTOM_LOADED = 'true'
 
-$script:ConfigRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+# Determinar la carpeta raíz del repositorio de forma robusta
+if ($PSScriptRoot) {
+    $script:ConfigRoot = $PSScriptRoot
+} elseif ($MyInvocation.MyCommand.Definition) {
+    $script:ConfigRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+} else {
+    $script:ConfigRoot = "$HOME\mis-configuraciones-powershell"
+}
 
 # Cargador modular defensivo
 $modulesToLoad = @(
@@ -34,7 +40,7 @@ foreach ($module in $modulesToLoad) {
 # Inicializar Oh My Posh de forma defensiva
 if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
     $themePath = Join-Path $script:ConfigRoot "config\oh-my-posh-theme.json"
-    if (Test-Path $themePath) {
+    if ((Test-Path $themePath) -and ((Get-Item $themePath).Length -gt 0)) {
         oh-my-posh init pwsh --config $themePath | Invoke-Expression
     } else {
         oh-my-posh init pwsh --config pure | Invoke-Expression
