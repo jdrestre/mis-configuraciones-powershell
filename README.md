@@ -1,32 +1,45 @@
 # ⚡ Mis Configuraciones PowerShell (`powershell-custom`)
 
-¡Bienvenido a la suite personalizada y modular de **Windows PowerShell**!
+¡Bienvenido a la suite personalizada, modular y 100% automatizada de **Windows PowerShell**!
 
 Este repositorio contiene las configuraciones, utilidades, alias, autocompletado avanzado y temas visuales para **PowerShell Core (`pwsh`)** y **Windows PowerShell**, estructurados bajo las mejores prácticas de Microsoft y [ohmyposh.dev](https://ohmyposh.dev/).
 
 ---
 
-## 📋 Prerrequisitos de Entorno
+## ⚡ Instalación en 2 Pasos Sencillos (Desde la Raíz de Usuario)
 
-Para que PowerShell funcione al 100% de su capacidad sin errores en cualquier equipo con Windows 11, se requiere cumplir con las siguientes herramientas previas:
+No necesitas recordar rutas complejas ni crear carpetas a mano. Cuando estés en cualquier computador nuevo con Windows 11, colócate en la carpeta raíz de tu usuario (`C:\Users\<TuUsuario>`) y sigue estos 2 pasos:
 
-| Componente | Comando de Instalación / Verificación | Función en la Terminal |
-| :--- | :--- | :--- |
-| **Git for Windows** | `winget install --id Git.Git -e` | Renderizado de estado de repositorios y soporte SSH/Git. |
-| **Oh My Posh** | `winget install JanDeDobbeleer.OhMyPosh -s winget` | Engine visual para el prompt inteligente multilínea. |
-| **Terminal-Icons** | `Install-Module Terminal-Icons -Scope CurrentUser` | Inyección de íconos gráficos para carpetas y archivos en `ls`. |
-| **Nerd Font** | *CaskaydiaCove Nerd Font* o *FiraCode Nerd Font* | Tipografía con glifos para visualizar íconos sin caracteres rotos. |
-| **Politica de Ejecución** | `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` | Permite la carga del perfil `$PROFILE` de usuario. |
+### 1️⃣ Paso 1: Clonar el repositorio
+```powershell
+git clone git@github.com:jdrestre/mis-configuraciones-powershell.git
+```
+
+### 2️⃣ Paso 2: Ejecutar el instalador automático
+```powershell
+.\mis-configuraciones-powershell\bootstrap.ps1
+```
 
 ---
 
-## 🔑 Autenticación SSH con GitHub (Portabilidad sin Contraseña)
+## 🧭 ¿Qué hace el instalador `bootstrap.ps1` automáticamente?
 
-Para realizar `git push` y `git pull` de forma segura sin ingresar credenciales manualmente:
+Una vez ejecutas `bootstrap.ps1`, el script toma el control y realiza todo de forma transparente:
 
-1. **Generar Clave SSH (Si no existe)**:
+1. **Relocalización Automática de Carpetas**: Detecta si estás ejecutando el script desde la raíz o desde la descarga inicial, crea la carpeta `.config` y mueve/ubica el repositorio en `$HOME\.config\powershell-custom`.
+2. **Auto-instalación de Requisitos**: Instala **Git for Windows**, **Oh My Posh** o **Terminal-Icons** usando `winget` e `Install-Module` si no están en el equipo.
+3. **Respaldo y Vinculación Novedosa de Perfil**: Detecta dónde está el `$PROFILE` nativo del sistema (OneDrive o Documentos local), crea un respaldo `.bak` si existía un perfil viejo y configura el puente hacia el perfil maestro.
+4. **Habilitación de Políticas de Ejecución**: Configura `ExecutionPolicy RemoteSigned` automáticamente para evitar bloqueos de scripts.
+
+---
+
+## 🔑 Autenticación SSH con GitHub (Sin Contraseña)
+
+Para poder realizar `git push` y `git pull` sin ingresar credenciales:
+
+1. **Generar Clave SSH (Si el equipo no tiene una)**:
    ```powershell
-   ssh-keygen -t ed25519 -C "tu_correo@ejemplo.com"
+   ssh-keygen -t ed25519 -C "jdrestre79@gmail.com"
    ```
 2. **Copiar Clave Pública al Portapapeles**:
    ```powershell
@@ -39,24 +52,6 @@ Para realizar `git push` y `git pull` de forma segura sin ingresar credenciales 
    ```powershell
    ssh -T git@github.com
    ```
-
----
-
-## 💻 Instalación Rápida en un Equipo Nuevo
-
-Si estás configurando un computador nuevo desde cero:
-
-```powershell
-# 1. Habilitar ejecución de scripts
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-
-# 2. Clonar este repositorio en la ubicación estándar
-New-Item -ItemType Directory -Path "$HOME\.config" -Force
-git clone git@github.com:jdrestre/mis-configuraciones-powershell.git "$HOME\.config\powershell-custom"
-
-# 3. Ejecutar el script de aprovisionamiento automatizado
-& "$HOME\.config\powershell-custom\bootstrap.ps1"
-```
 
 ---
 
