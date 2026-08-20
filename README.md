@@ -39,7 +39,7 @@ Para poder realizar `git push` y `git pull` sin ingresar credenciales:
 
 1. **Generar Clave SSH (Si el equipo no tiene una)**:
    ```powershell
-   ssh-keygen -t ed25519 -C "jdrestre79@gmail.com"
+   ssh-keygen -t ed25519 -C "micorreo@micorreo.com"
    ```
 2. **Copiar Clave Pública al Portapapeles**:
    ```powershell
