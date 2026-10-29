@@ -4,9 +4,9 @@
 # Autores: Juan David Restrepo (jdrestre)
 # ==============================================================================
 
-# Evitar recarga innecesaria si ya se ejecutó en la misma sesión
-if ($env:PWSH_CUSTOM_LOADED -eq 'true') { return }
-$env:PWSH_CUSTOM_LOADED = 'true'
+# Evitar recarga innecesaria si ya se ejecutó en este mismo proceso PowerShell
+if ($global:PWSH_CUSTOM_LOADED_PID -eq $PID) { return }
+$global:PWSH_CUSTOM_LOADED_PID = $PID
 
 # Determinar la carpeta raíz del repositorio de forma robusta
 if ($PSScriptRoot) {
